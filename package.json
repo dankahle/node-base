@@ -1,0 +1,24 @@
+{
+  "name": "node-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dankahle/node-base.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dankahle/node-base/issues"
+  },
+  "homepage": "https://github.com/dankahle/node-base#readme",
+  "dependencies": {
+    "chance": "^1.0.12",
+    "tv4": "^1.3.0",
+    "tv4-formats": "^3.0.3"
+  }
+}

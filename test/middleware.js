@@ -1,7 +1,8 @@
 const request = require('supertest'),
   expect = require('chai').expect,
   express = require('express'),
-  lib = require('../'),
+  lib = require('..'),
+  config = new lib.Config(),
   notFound = lib.middleware.notFound,
   errorHandler = lib.middleware.errorHandler,
   BasicError = lib.errors.BasicError,
@@ -81,6 +82,20 @@ describe('middleware', function() {
     })
 
     it('should return correct json for server error', function(done) {
+      request(app)
+        .get('/server-error')
+        .expect(500)
+        .expect(function(res) {
+          expect(res.body.message).to.equal('something bad');
+          expect(res.body.stack).to.not.exist;
+
+        })
+        .end(done)
+    })
+
+    it('should return stack when showStackWithErrors=true', function(done) {
+      config.setConfig({showStackWithErrors: true});
+
       request(app)
         .get('/server-error')
         .expect(500)

@@ -9,6 +9,7 @@ const request = require('supertest'),
   ExtendedError = lib.errors.ExtendedError;
 
 const message = 'message',
+  badMessage = 'something bad',
   errorCode = '111-2222',
   statusCode = 444,
   stack = 'stack',
@@ -33,7 +34,7 @@ app.get('/extended-error', function(req, res, next) {
 });
 
 app.get('/server-error', function(req, res, next) {
-  throw new Error('something bad');
+  throw new Error(badMessage);
 });
 
 app.use(notFound);
@@ -53,7 +54,10 @@ describe('middleware', function() {
     it('should return 404 not found for missing endpoint', function(done) {
       request(app)
         .get('/missing')
-        .expect(404, { message: 'Endpoint not found.' }, done);
+        .expect(404, {
+          errorCode: "000-0105",
+          message: "Endpoint not found."
+        }, done);
     })
 
   })
@@ -64,9 +68,9 @@ describe('middleware', function() {
       request(app)
         .get('/basic-error')
         .expect(statusCode, {
-          "errorCode": "111-2222",
-          "message": "message",
-          "stack": "stack"
+          errorCode: "111-2222",
+          message: "message",
+          stack: "stack"
         }, done)
     })
 
@@ -87,13 +91,7 @@ describe('middleware', function() {
     it('should return correct json for server error', function(done) {
       request(app)
         .get('/server-error')
-        .expect(500)
-        .expect(function(res) {
-          expect(res.body.message).to.equal('something bad');
-          expect(res.body.stack).to.not.exist;
-
-        })
-        .end(done)
+        .expect(500, {message: badMessage}, done);
     })
 
     it('should return stack when showStackWithErrors=true', function(done) {
@@ -103,9 +101,8 @@ describe('middleware', function() {
         .get('/server-error')
         .expect(500)
         .expect(function(res) {
-          expect(res.body.message).to.equal('something bad');
+          expect(res.body.message).to.equal(badMessage);
           expect(res.body.stack).to.exist;
-
         })
         .end(done)
     })

@@ -9,6 +9,7 @@ const request = require('supertest'),
   ExtendedError = lib.errors.ExtendedError;
 
 const message = 'message',
+  errorCode = '111-2222',
   statusCode = 444,
   stack = 'stack',
   data = {name: 'dank', age: 50};
@@ -20,13 +21,13 @@ app.get('/user', function(req, res) {
 });
 
 app.get('/basic-error', function(req, res, next) {
-  const err = new BasicError(message, statusCode);
+  const err = new BasicError(message, errorCode, statusCode);
   err.stack = stack;
   next(err);
 });
 
 app.get('/extended-error', function(req, res, next) {
-  const err = new ExtendedError(message, data, statusCode);
+  const err = new ExtendedError(message, data, errorCode, statusCode);
   err.stack = stack;
   next(err);
 });
@@ -63,6 +64,7 @@ describe('middleware', function() {
       request(app)
         .get('/basic-error')
         .expect(statusCode, {
+          "errorCode": "111-2222",
           "message": "message",
           "stack": "stack"
         }, done)
@@ -76,6 +78,7 @@ describe('middleware', function() {
             "age": 50,
             "name": "dank"
           },
+          "errorCode": "111-2222",
           "message": "message",
           "stack": "stack"
         }, done)

@@ -1,10 +1,11 @@
 
-000-  prefix for server
+000-    prefix for server
 
-0100   invalid route ID
-0101   failed to find resource
-0102   failed to add resource
-0103   failed to update resource
-0104   failed to delete resource
-0105   endpoint not found
-0106   unknown server error
+0100    invalid route ID
+0101    failed to find resource
+0102    failed to add resource
+0103    failed to update resource
+0104    failed to delete resource
+0105    endpoint not found
+0106    unknown server error
+0107    invalid parameters

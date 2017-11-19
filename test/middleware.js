@@ -45,9 +45,6 @@ app.use(function(req, res, next) {
   };
   next();
 })
-app.use('/api/login', loginRouter);
-app.use('/api/register', registerRouter);
-app.use(authenticate({stuff: 'lala'}));
 
 app.get('/user', function (req, res) {
   res.status(200).json({name: 'dank'});
@@ -74,63 +71,6 @@ app.use(errorHandler());
 
 
 describe('middleware', function () {
-
-
-  describe('authenticate', function () {
-
-    it('should fail authentication initially', function (done) {
-      request(app)
-        .get('/cause-401-endpoint')
-        .expect(401)
-        .expect(function(res) {
-          expect(res.body.errorCode).to.equal(errorCodes.server_prefix + errorCodes.user_not_authenticated);
-        })
-        .end(done);
-    })
-
-    it('login user', function(done) {
-      request(app)
-        .post('/api/login')
-        .send({name: 'dank'})
-        .expect(200)
-        .expect('set-cookie', /dkAuth=/)
-        .expect(function(res) {
-          expect(res.headers['set-cookie']).to.match(/dkAuth/)
-          expect(res.body.name).to.equal('dank');
-          expect(Validate.validateGuid(res.body._id)).to.be.true;
-        })
-        .end(done)
-    })
-
-    it('register user already exists', function(done) {
-      request(app)
-        .post('/api/register')
-        .send({name: 'dank'})
-        .expect(400)
-        .expect(function(res) {
-          expect(res.body.errorCode).to.equal(errorCodes.server_prefix + errorCodes.user_already_exists);
-        })
-        .end(done)
-    })
-
-/*
-  // can't do this cause we'd have to overwrite req.db mock
-    it('register user newreg', function(done) {
-      request(app)
-        .post('/api/register')
-        .send({name: 'newreg'})
-        .expect(200)
-        .expect('set-cookie', /dkAuth=/)
-        .expect(function(res) {
-          expect(res.headers['set-cookie']).to.match(/dkAuth/)
-          expect(res.body.name).to.equal('newreg');
-          expect(Validate.validateGuid(res.body._id)).to.be.true;
-        })
-        .end(done)
-    })
-*/
-
-  })
 
   describe('notFound', function () {
 

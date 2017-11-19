@@ -7,9 +7,6 @@ module.exports = {
     ExtendedError: require('./lib/errors/extendedError')
   },
   middleware: {
-    authenticate: require('./lib/middleware/authenticate'),
-    loginRouter: require('./lib/middleware/loginRouter'),
-    registerRouter: require('./lib/middleware/registerRouter'),
     errorHandler: require('./lib/middleware/errorHandler'),
     notFound: require('./lib/middleware/notFound')
   }

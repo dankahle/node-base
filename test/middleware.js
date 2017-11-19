@@ -13,7 +13,8 @@ const request = require('supertest'),
   errorCodes = lib.errors.errorCodes,
   loginRouter = lib.middleware.loginRouter,
   registerRouter = lib.middleware.registerRouter,
-  Validate = lib.Validate;
+  Validate = lib.Validate,
+  _ = require('lodash');
 
 
 const message = 'message',
@@ -46,7 +47,7 @@ app.use(function(req, res, next) {
 })
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
-app.use(authenticate);
+app.use(authenticate({stuff: 'lala'}));
 
 app.get('/user', function (req, res) {
   res.status(200).json({name: 'dank'});
@@ -68,8 +69,8 @@ app.get('/server-error', function (req, res, next) {
   throw new Error(badMessage);
 });
 
-app.use(notFound);
-app.use(errorHandler);
+app.use(notFound());
+app.use(errorHandler());
 
 
 describe('middleware', function () {
@@ -185,7 +186,7 @@ describe('middleware', function () {
     })
 
     it('should return stack when showStackWithErrors=true', function (done) {
-      config.setConfig({showStackWithErrors: true});
+      config.setConfig(_.set({}, 'middleware.errorHandler.showStackWithErrors', true));
 
       request(app)
         .get('/server-error')

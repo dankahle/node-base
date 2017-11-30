@@ -87,6 +87,7 @@ describe('middleware', function () {
         .expect(function(res) {
           expect(res.body.errorCode).to.equal(errorCodes.server_prefix + errorCodes.server_endpoint_not_found);
           expect(res.body.message).to.equal('Endpoint not found.')
+          expect(res.body.data).to.eql({method: 'GET', url: '/bad-endpoint'})
         })
         .end(done);
     })
